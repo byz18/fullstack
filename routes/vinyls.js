@@ -1,15 +1,15 @@
 const express = require('express')
-const router  = express.Router()
+const router = express.Router()
 const multer = require('multer')
 const path = require('path')
 const Vinyl = require('../models/vinyl')
-const uploadPath = path.join('public', Vinyl.coverImageBasePath)
 const Artist = require('../models/artist')
-const imageMimeTypes = ['image/jpeg', 'image/png', 'image/gif']
+const uploadPath = path.join('public', Vinyl.coverImageBasePath)
+const imageMimeTypes = ['image/jpeg', 'image/png', 'images/gif']
 const upload = multer({
     dest: uploadPath,
     fileFilter: (req, file, callback) => {
-        callback(null, )
+        callback(null, imageMimeTypes.includes(file.mimetype))
     }
 })
 
@@ -46,7 +46,7 @@ router.post('/', upload.single('cover'), async (req, res) => {
 
 async function renderNewPage(res, vinyl, hasError = false) {
     try {
-        const artists = await Artist.find ({})
+        const artists = await Artist.find({})
         const params = {
             artists: artists,
             vinyl: vinyl
