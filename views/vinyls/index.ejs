@@ -1,0 +1,20 @@
+<h2>Search Vinyls</h2>
+<form action="/vinyls" method="GET">
+    <div>
+        <label>Title</label>
+        <input type="text" name ="title" value="<%= searchOptions.title %>">
+    </div>
+    <div>
+        <label>Released After</label>
+        <input type="date" name ="releasedAfter" value="<%= searchOptions.releasedAfter %>">
+    </div>
+    <div>
+        <label>Released Before</label>
+        <input type="date" name ="releasedBefore" value="<%= searchOptions.releasedBefore %>">
+    </div>
+</form>
+<div>
+    <% vinyls.forEach(vinyl => { %>
+        <img height="150" width ="150" src="<%= vinyl.coverImagePath %>">
+    <% }) %>
+</div>

@@ -20,10 +20,11 @@ app.use(express.urlencoded({ limit: '10mb', extended: false}))
 
 const mongoose = require('mongoose')
 mongoose.connect(process.env.DATABASE_URL, { 
-    useNewUrlParser: true })
+    useNewUrlParser: true,
+    useUnifiedTopology: true })
 const db = mongoose.connection
 db.on('error', error => console.error(error))
-db.once('error', error => console.error('Connected to Mongoose'))
+db.once('open', error => console.log('Connected to Mongoose'))
 
 app.use('/', indexRouter)
 app.use('/artists', artistRouter)

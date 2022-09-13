@@ -2,8 +2,10 @@ const express = require('express')
 const router = express.Router()
 const multer = require('multer')
 const path = require('path')
+const fs = require('fs')
 const Vinyl = require('../models/vinyl')
 const Artist = require('../models/artist')
+const { query } = require('express')
 const uploadPath = path.join('public', Vinyl.coverImageBasePath)
 const imageMimeTypes = ['image/jpeg', 'image/png', 'images/gif']
 const upload = multer({
@@ -15,7 +17,27 @@ const upload = multer({
 
 // All Vinyls async
 router.get('/', async (req, res) => {
-    res.send('All Vinyls')    
+    let query = Vinyl.find()
+    // check for empty string
+    // check from database model to create regexp containing title
+    if (req.query.title != null && req.query.title != '') {         
+        query = query.regex('title', new RegExp(req.query.title, 'i'))
+    }
+    if (req.query.releasedBefore != null && req.query.releasedBefore != '') {         
+        query = query.lte('releaseDate', req.query.releasedBefore)
+    }
+    if (req.query.releasedAfter != null && req.query.releasedAfter != '') {         
+        query = query.gte('releaseDate', req.query.releasedAfter)
+    }
+    try {
+        const vinyls = await query.exec()
+        res.render('vinyls/index', {
+            vinyls: vinyls,
+            searchOptions: req.query
+        })
+    } catch {
+        res.redirect('/')
+    }
 })
 
 // New Vinyl async
@@ -40,9 +62,19 @@ router.post('/', upload.single('cover'), async (req, res) => {
         //res.redirect(`vinyls/${newVinyl.id}`)
         res.redirect(`vinyls`)
     } catch {
+        if (vinyl.coverImageName != null) {
+            removeAlbumCover(vinyl.coverImageName)
+        }
         renderNewPage(res, vinyl, true)
     }
 })
+
+// remove file from albumCover folder with log
+function removeAlbumCover(fileName) {
+    fs.unlink(path.join(uploadPath, fileName), err => {
+        if (err) console.error(err)
+    })
+}
 
 async function renderNewPage(res, vinyl, hasError = false) {
     try {
