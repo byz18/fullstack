@@ -18,7 +18,7 @@ router.get('/', async (req, res) => {
     }
 })
 
-// New Artist 
+// Add Artist 
 router.get('/new', (req, res) => {
     res.render('artists/new', { artist: new Artist() })
 })

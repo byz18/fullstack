@@ -40,7 +40,7 @@ router.get('/', async (req, res) => {
     }
 })
 
-// New Vinyl async
+// Add Vinyl async
 router.get('/new', async (req, res) => {
     renderNewPage(res, new Vinyl())
 })

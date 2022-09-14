@@ -1,26 +1,16 @@
+
+// Define "require"
+//import { createRequire } from "module";
+//const require = createRequire(import.meta.url);
+
+const multer = require('multer')
+const express = require('express')
+
+
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
 
-const express = require('express')
-const multer = require('multer')
-
-// AWS s3
-import { S3Client } from "@aws-sdk/client-s3";
-
-const bucketName = process.env.BUCKET_NAME
-const bucketRegion = process.env.BUCKET_REGION
-const accessKey = process.env.ACCESS_KEY
-const secretAccessKey = process.env.SECRET_ACCESS_KEY
-
-const s3 = new S3Client({
-    credentials: {
-        accessKeyId: accessKey,
-        secretAccessKey: secretAccessKey,
-    },
-    region: bucketRegion
-
-});
 
 //
 const app = express()
@@ -40,12 +30,6 @@ app.set('layout', 'layouts/layout')
 app.use(expressLayouts)
 app.use(express.static('public'))
 app.use(express.urlencoded({ limit: '10mb', extended: false}))
-
-
-const { coverImageBasePath } = require('./models/vinyl')
-app.post(coverImageBasePath, upload.single(coverImageName), async )
-
-
 
 const mongoose = require('mongoose')
 mongoose.connect(process.env.DATABASE_URL, { 
