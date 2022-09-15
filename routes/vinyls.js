@@ -3,16 +3,55 @@ const router = express.Router()
 const multer = require('multer')
 const path = require('path')
 const fs = require('fs')
+
+const sharp = require('sharp')
+
+const crypto = require('crypto')
+const randomImageName = () => crypto.randomBytes(16).toString('hex')
+
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+}
+
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage})
+
 const Vinyl = require('../models/vinyl')
 const Artist = require('../models/artist')
 const { query } = require('express')
-const uploadPath = path.join('public', Vinyl.coverImageBasePath)
+const coverImageBasePath = 'api/posts'
 const imageMimeTypes = ['image/jpeg', 'image/png', 'images/gif']
-const upload = multer({
+
+
+const uploadPath = path.join('public', Vinyl.coverImageBasePath)
+const uploadMongodb = multer({
     dest: uploadPath,
     fileFilter: (req, file, callback) => {
         callback(null, imageMimeTypes.includes(file.mimetype))
     }
+})
+
+// AWS s3
+const aws = require('aws-sdk')
+const {Upload} = require('@aws-sdk/lib-storage')
+const multerS3 = require('multer-s3')
+const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3')
+const { compileFunction } = require('vm')
+
+
+
+const bucketName = process.env.BUCKET_NAME
+const bucketRegion = process.env.BUCKET_REGION
+const accessKey = process.env.ACCESS_KEY
+const secretAccessKey = process.env.SECRET_ACCESS_KEY
+
+const s3 = new S3Client({
+    credentials: {
+        accessKeyId: accessKey,
+        secretAccessKey: secretAccessKey,
+    },
+    region: bucketRegion
+
 })
 
 // All Vinyls async
@@ -45,8 +84,14 @@ router.get('/new', async (req, res) => {
     renderNewPage(res, new Vinyl())
 })
 
-// Create Vinyl async
-router.post('/', upload.single('cover'), async (req, res) => {
+// Create Vinyl async //
+
+//MONGODB upload
+
+
+
+function mongo(){
+    router.post('/', uploadMongodb.single('cover'), async (req, res) => {
     const fileName = req.file != null ? req.file.filename : null
     const vinyl = new Vinyl({
         title: req.body.title,
@@ -67,7 +112,35 @@ router.post('/', upload.single('cover'), async (req, res) => {
         }
         renderNewPage(res, vinyl, true)
     }
+}) }
+
+
+//AWS image upload
+router.post('/', upload.single('cover'), async (req, res) => {
+    
+    console.log("req.body", req.body)
+    console.log("req.file", req.file)
+
+    //resize
+    const buffer = await sharp(req.file.buffer).resize({height: 150, width: 150, fit: "contain"}).toBuffer()
+    //randomise image name
+    const imageName = randomImageName()
+
+    const params = {
+        Bucket: bucketName,
+        Key: imageName,
+        Body: buffer,
+        ContentType: req.file.mimetype,
+    }
+
+    const command = new PutObjectCommand(params)
+    await s3.send(command)
+
+
+    res.send({})
 })
+
+
 
 // remove file from albumCover folder with log
 function removeAlbumCover(fileName) {
@@ -89,6 +162,7 @@ async function renderNewPage(res, vinyl, hasError = false) {
         res.redirect('/vinyls')
     }
 }
+
 
 
 module.exports = router
