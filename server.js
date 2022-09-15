@@ -1,18 +1,10 @@
-
-// Define "require"
-//import { createRequire } from "module";
-//const require = createRequire(import.meta.url);
-
 const multer = require('multer')
 const express = require('express')
-
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
 
-
-//
 const app = express()
 const expressLayouts = require('express-ejs-layouts')
 const bodyParser = require('body-parser')
@@ -23,6 +15,7 @@ const upload = multer({ storage: storage})
 const indexRouter = require('./routes/index')
 const artistRouter = require('./routes/artists')
 const vinylRouter = require('./routes/vinyls')
+const loginRouter = require('./routes/login')
 
 app.set('view engine', 'ejs')
 app.set('views', __dirname + '/views')
@@ -42,5 +35,6 @@ db.once('open', error => console.log('Connected to Mongoose'))
 app.use('/', indexRouter)
 app.use('/artists', artistRouter)
 app.use('/vinyls', vinylRouter)
+app.use('/login', loginRouter)
 
 app.listen(process.env.PORT || 3000)
