@@ -4,11 +4,6 @@ const multer = require('multer')
 const path = require('path')
 const fs = require('fs')
 
-const sharp = require('sharp')
-
-const crypto = require('crypto')
-const randomImageName = () => crypto.randomBytes(16).toString('hex') //randomiser for image name
-
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
@@ -29,28 +24,6 @@ const uploadMongodb = multer({
     }
 })
 
-// AWS s3
-const aws = require('aws-sdk')
-const {Upload} = require('@aws-sdk/lib-storage')
-const multerS3 = require('multer-s3')
-const { S3Client, PutObjectCommand } = require('@aws-sdk/client-s3')
-const { compileFunction } = require('vm')
-
-
-
-const bucketName = process.env.BUCKET_NAME
-const bucketRegion = process.env.BUCKET_REGION
-const accessKey = process.env.ACCESS_KEY
-const secretAccessKey = process.env.SECRET_ACCESS_KEY
-
-const s3 = new S3Client({
-    credentials: {
-        accessKeyId: accessKey,
-        secretAccessKey: secretAccessKey,
-    },
-    region: bucketRegion
-
-})
 
 // All Vinyls async
 router.get('/', async (req, res) => {
@@ -86,7 +59,7 @@ router.get('/new', async (req, res) => {
 
 //MONGODB upload
 
-router.post('/local', uploadMongodb.single('cover'), async (req, res) => {
+router.post('/', uploadMongodb.single('cover'), async (req, res) => {
     const fileName = req.file != null ? req.file.filename : null
     const vinyl = new Vinyl({
         title: req.body.title,
@@ -109,29 +82,6 @@ router.post('/local', uploadMongodb.single('cover'), async (req, res) => {
     }
 }) 
 
-
-//AWS image upload
-
-router.post('/cloud', upload.single('cover'), async (req, res) => {
-    
-    //resize
-    const buffer = await sharp(req.file.buffer).resize({height: 150, width: 150, fit: "contain"}).toBuffer()
-    //randomise image name
-    const imageName = randomImageName()
-
-    const params = {
-        Bucket: bucketName,
-        Key: imageName,
-        Body: buffer,
-        ContentType: req.file.mimetype,
-    }
-
-    const command = new PutObjectCommand(params)
-    await s3.send(command)
-
-
-    res.send({})
-})
 
 
 // remove file from albumCover folder with log
