@@ -1,4 +1,9 @@
 .env
 node_modules
+<<<<<<< HEAD
 public
+=======
+public/uploads
+public/api
+>>>>>>> 0d77ef1ac16c9c3b4e4a847eef122686c26d8bdf
 AWS

@@ -3,17 +3,27 @@ const router = express.Router()
 const multer = require('multer')
 const path = require('path')
 const fs = require('fs')
+
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config()
+}
+
 const Vinyl = require('../models/vinyl')
 const Artist = require('../models/artist')
 const { query } = require('express')
+
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage})
+
+const imageMimeTypes = ['image/jpeg', 'image/png', 'images/gif']  //accepted file types
 const uploadPath = path.join('public', Vinyl.coverImageBasePath)
-const imageMimeTypes = ['image/jpeg', 'image/png', 'images/gif']
-const upload = multer({
+const uploadMongodb = multer({
     dest: uploadPath,
     fileFilter: (req, file, callback) => {
         callback(null, imageMimeTypes.includes(file.mimetype))
     }
 })
+
 
 // All Vinyls async
 router.get('/', async (req, res) => {
@@ -45,8 +55,11 @@ router.get('/new', async (req, res) => {
     renderNewPage(res, new Vinyl())
 })
 
-// Create Vinyl async
-router.post('/', upload.single('cover'), async (req, res) => {
+// Create Vinyl async //
+
+//MONGODB upload
+
+router.post('/', uploadMongodb.single('cover'), async (req, res) => {
     const fileName = req.file != null ? req.file.filename : null
     const vinyl = new Vinyl({
         title: req.body.title,
@@ -67,7 +80,9 @@ router.post('/', upload.single('cover'), async (req, res) => {
         }
         renderNewPage(res, vinyl, true)
     }
-})
+}) 
+
+
 
 // remove file from albumCover folder with log
 function removeAlbumCover(fileName) {
@@ -76,6 +91,7 @@ function removeAlbumCover(fileName) {
     })
 }
 
+// render/redirects page with error message
 async function renderNewPage(res, vinyl, hasError = false) {
     try {
         const artists = await Artist.find({})
