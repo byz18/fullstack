@@ -7,22 +7,20 @@ const fs = require('fs')
 const sharp = require('sharp')
 
 const crypto = require('crypto')
-const randomImageName = () => crypto.randomBytes(16).toString('hex')
+const randomImageName = () => crypto.randomBytes(16).toString('hex') //randomiser for image name
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
 }
 
-const storage = multer.memoryStorage()
-const upload = multer({ storage: storage})
-
 const Vinyl = require('../models/vinyl')
 const Artist = require('../models/artist')
 const { query } = require('express')
-const coverImageBasePath = 'api/posts'
-const imageMimeTypes = ['image/jpeg', 'image/png', 'images/gif']
 
+const storage = multer.memoryStorage()
+const upload = multer({ storage: storage})
 
+const imageMimeTypes = ['image/jpeg', 'image/png', 'images/gif']  //accepted file types
 const uploadPath = path.join('public', Vinyl.coverImageBasePath)
 const uploadMongodb = multer({
     dest: uploadPath,
@@ -88,10 +86,7 @@ router.get('/new', async (req, res) => {
 
 //MONGODB upload
 
-
-
-function mongo(){
-    router.post('/', uploadMongodb.single('cover'), async (req, res) => {
+router.post('/local', uploadMongodb.single('cover'), async (req, res) => {
     const fileName = req.file != null ? req.file.filename : null
     const vinyl = new Vinyl({
         title: req.body.title,
@@ -112,15 +107,13 @@ function mongo(){
         }
         renderNewPage(res, vinyl, true)
     }
-}) }
+}) 
 
 
 //AWS image upload
-router.post('/', upload.single('cover'), async (req, res) => {
-    
-    console.log("req.body", req.body)
-    console.log("req.file", req.file)
 
+router.post('/cloud', upload.single('cover'), async (req, res) => {
+    
     //resize
     const buffer = await sharp(req.file.buffer).resize({height: 150, width: 150, fit: "contain"}).toBuffer()
     //randomise image name
@@ -141,7 +134,6 @@ router.post('/', upload.single('cover'), async (req, res) => {
 })
 
 
-
 // remove file from albumCover folder with log
 function removeAlbumCover(fileName) {
     fs.unlink(path.join(uploadPath, fileName), err => {
@@ -149,6 +141,7 @@ function removeAlbumCover(fileName) {
     })
 }
 
+// render/redirects page with error message
 async function renderNewPage(res, vinyl, hasError = false) {
     try {
         const artists = await Artist.find({})
@@ -162,7 +155,6 @@ async function renderNewPage(res, vinyl, hasError = false) {
         res.redirect('/vinyls')
     }
 }
-
 
 
 module.exports = router

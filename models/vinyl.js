@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 const path = require('path')
-const coverImageBasePath = 'api/posts'
+const coverImageBasePath = 'uploads/vinyls'
 
 const vinylSchema = new mongoose.Schema({
     title: {
