@@ -1,8 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const multer = require('multer')
-const path = require('path')
-const fs = require('fs')
 
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config()
@@ -12,17 +9,7 @@ const Vinyl = require('../models/vinyl')
 const Artist = require('../models/artist')
 const { query } = require('express')
 
-const storage = multer.memoryStorage()
-const upload = multer({ storage: storage})
-
 const imageMimeTypes = ['image/jpeg', 'image/png', 'images/gif']  //accepted file types
-const uploadPath = path.join('public', Vinyl.coverImageBasePath)
-const uploadMongodb = multer({
-    dest: uploadPath,
-    fileFilter: (req, file, callback) => {
-        callback(null, imageMimeTypes.includes(file.mimetype))
-    }
-})
 
 
 // All Vinyls async
@@ -57,39 +44,27 @@ router.get('/new', async (req, res) => {
 
 // Create Vinyl async //
 
-//MONGODB upload
+//upload
 
-router.post('/', uploadMongodb.single('cover'), async (req, res) => {
-    const fileName = req.file != null ? req.file.filename : null
+router.post('/', async (req, res) => {
     const vinyl = new Vinyl({
         title: req.body.title,
         artist: req.body.artist,
         releaseDate: new Date(req.body.releaseDate),
         genre: req.body.genre,
-        coverImageName: fileName,
         description: req.body.description
     })
+    saveCover(vinyl, req.body.cover)
 
     try {
         const newVinyl = await vinyl.save()
         //res.redirect(`vinyls/${newVinyl.id}`)
         res.redirect(`vinyls`)
     } catch {
-        if (vinyl.coverImageName != null) {
-            removeAlbumCover(vinyl.coverImageName)
-        }
         renderNewPage(res, vinyl, true)
     }
 }) 
 
-
-
-// remove file from albumCover folder with log
-function removeAlbumCover(fileName) {
-    fs.unlink(path.join(uploadPath, fileName), err => {
-        if (err) console.error(err)
-    })
-}
 
 // render/redirects page with error message
 async function renderNewPage(res, vinyl, hasError = false) {
@@ -103,6 +78,15 @@ async function renderNewPage(res, vinyl, hasError = false) {
         res.render('vinyls/new', params)
     } catch {
         res.redirect('/vinyls')
+    }
+}
+
+function saveCover(vinyl, coverEncoded) {
+    if (coverEncoded == null) return
+    const cover = JSON.parse(coverEncoded)
+    if (cover != null && imageMimeTypes.includes(cover.type)) {
+        vinyl.coverImage = new Buffer.from(cover.data, 'base64')
+        vinyl.coverImageType = cover.type
     }
 }
 

@@ -1,4 +1,3 @@
-const multer = require('multer')
 const express = require('express')
 
 if (process.env.NODE_ENV !== 'production') {
@@ -8,9 +7,6 @@ if (process.env.NODE_ENV !== 'production') {
 const app = express()
 const expressLayouts = require('express-ejs-layouts')
 const bodyParser = require('body-parser')
-
-const storage = multer.memoryStorage()
-const upload = multer({ storage: storage})
 
 const indexRouter = require('./routes/index')
 const artistRouter = require('./routes/artists')

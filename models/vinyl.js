@@ -1,6 +1,4 @@
 const mongoose = require('mongoose')
-const path = require('path')
-const coverImageBasePath = 'uploads/albumCovers'
 
 const vinylSchema = new mongoose.Schema({
     title: {
@@ -23,9 +21,13 @@ const vinylSchema = new mongoose.Schema({
         required: true,
         default: Date.now
     },
-    coverImageName:{
-    type: String,
-    required: true
+    coverImage:{
+        type: Buffer,
+        required: true
+    },
+    coverImageType: {
+        type: String,
+        required: true
     },
     artist: {
         type: mongoose.Schema.Types.ObjectId,
@@ -34,12 +36,11 @@ const vinylSchema = new mongoose.Schema({
     }
 })
 
-// virtual property of image from public folder value
+// source of image object
 vinylSchema.virtual('coverImagePath').get(function() {
-    if (this.coverImageName != null) {
-        return path.join('/', coverImageBasePath, this.coverImageName)
+    if (this.coverImage != null && this.coverImageType != null) {
+        return `data:${this.coverImageType};charset=utf-8;base64,${this.coverImage.toString('base64')}`
     }
 })
 
 module.exports = mongoose.model('Vinyl', vinylSchema)
-module.exports.coverImageBasePath = coverImageBasePath
