@@ -1,10 +1,10 @@
 <h2><%= artist.name %></h2>
 <a href="/artists/<%= artist.id %>/edit">Edit</a>
-<%- include('../partials/deleteForm'),
-             { url: `/artists/${artist.id}` }) %>
-<% if (vinylsByArtist.length > 0) {
-    <h2>Vinyls By Artist</h2>
-    <% vinylsByArtist.forEach(vinyl => { %>
-        <img height="150" width ="150" src="<%= vinyl.coverImagePath %>">
-    <% }) %>
-}
+<%- include('../partials/deleteForm',
+            { url: `/artists/${artist.id}` }) %>
+<% if (vinylsByArtist.length > 0) { %>
+  <h2>Vinyls By Artist</h2>
+  <% vinylsByArtist.forEach(vinyl => { %>
+    <img height="150" width="150" src="<%= vinyl.coverImagePath %>">
+  <% }) %>
+<% } %>

@@ -5,7 +5,7 @@ document.addEventListener('DOMContentLoaded', function() {
     const inputElement = document.querySelector('input[type="file"]');
     const pond = FilePond.create(inputElement);
     FilePond.setOptions({
-        stylePanelAspectRatio: 150 / 150,
+        stylePanelAspectRatio: 1 / 1,
         imageResizeTargetWidth: 150,
         imageResizeTargetHeight: 150,
     });

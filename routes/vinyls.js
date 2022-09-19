@@ -1,14 +1,7 @@
 const express = require('express')
 const router = express.Router()
-
-if (process.env.NODE_ENV !== 'production') {
-    require('dotenv').config()
-}
-
 const Vinyl = require('../models/vinyl')
 const Artist = require('../models/artist')
-const { query } = require('express')
-
 const imageMimeTypes = ['image/jpeg', 'image/png', 'images/gif']  //accepted file types
 
 

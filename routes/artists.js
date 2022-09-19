@@ -41,22 +41,22 @@ router.post('/', async (req, res) => {
     }
 })
 
-
+// view artist
 router.get('/:id', async (req, res) => {
     try {
         const artist = await Artist.findById(req.params.id)
-        const vinyls = await Vinyl.find({ vinyl: vinyl.id }).limit(10).exec()
+        const vinyls = await Vinyl.find({ artist: artist.id }).limit(10).exec()
         res.render('artists/show', {
             artist: artist,
             vinylsByArtist: vinyls
         })
-    } catch (err) {
-        console.log(err)
+    } catch {
         res.redirect('/')
     }
 
 })
 
+// edit artist page
 router.get('/:id/edit', async (req, res) => {
     try {
         const artist = await Artist.findById(req.params.id)
@@ -67,6 +67,7 @@ router.get('/:id/edit', async (req, res) => {
 
 })
 
+// update artist
 router.put('/:id', async (req, res) => {
     let artist
     try {
@@ -86,6 +87,7 @@ router.put('/:id', async (req, res) => {
     }
 })
 
+// delete artist
 router.delete('/:id', async (req, res) => {
     let artist
     try {
