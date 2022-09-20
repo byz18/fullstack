@@ -1,0 +1,48 @@
+:root {
+    --color-btn-primary-background: var(--color-text-light);
+    --color-btn-primary-text: var(--color-background-dark);
+    --color-btn-border: var(--color-text-light);
+    --color-btn-primary-background-medium: var(--color-text-medium);
+
+    --color-btn-danger-background:var(--color-text-light) ;
+    --color-btn-danger-text: rgb(180, 0, 0, 0.9);
+}
+
+.btn {
+    border: 1px solid var(--color-btn-border);
+    border-radius: 0.3rem;
+    padding: 0.1rem 0.5rem;
+    font-size: 1rem;
+    font-family: 'Futura';
+    cursor: pointer;
+    text-decoration: none;
+    text-align: center;
+}
+
+.btn-row {
+    display: flex;
+    align-items: flex-start;
+}
+
+.btn-row > * {
+    margin-left: 1rem;
+}
+
+.btn-row > *:first-child {
+    margin-left: 0;
+}
+
+.btn-primary {
+    color: var(--color-btn-primary-text);
+    background-color: var(--color-btn-primary-background);
+}
+
+
+.btn-danger {
+    color: var(--color-btn-danger-text);
+    background-color: var(--color-btn-danger-background);
+}
+
+.btn:hover {
+    background-color: var(--color-btn-primary-background-medium);
+}

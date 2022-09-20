@@ -1,8 +1,10 @@
-<h2><%= artist.name %></h2>
-<a href="/artists/<%= artist.id %>/edit">Edit</a>
-<%- include('../partials/deleteForm',
-            { url: `/artists/${artist.id}` }) %>
-<% if (vinylsByArtist.length > 0) { %>
+<h2 class="page-header"><%= artist.name %></h2>
+<div class="btn-row">
+  <a class="btn btn-primary" href="/artists/<%= artist.id %>/edit">Edit</a>
+  <%- include('../partials/deleteForm',
+  { url: `/artists/${artist.id}` }) %>
+  <% if (vinylsByArtist.length > 0) { %>
+</div>
   <h2>Vinyls By Artist</h2>
   <% vinylsByArtist.forEach(vinyl => { %>
     <a href="/vinyls/<%= vinyl.id %>">
