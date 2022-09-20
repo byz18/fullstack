@@ -5,7 +5,7 @@ const Artist = require('../models/artist')
 const imageMimeTypes = ['image/jpeg', 'image/png', 'images/gif']  //accepted file types
 
 
-// All Vinyls async
+// All Vinyls 
 router.get('/', async (req, res) => {
     let query = Vinyl.find()
     // check for empty string
@@ -30,14 +30,12 @@ router.get('/', async (req, res) => {
     }
 })
 
-// Add Vinyl async
+// New Vinyl 
 router.get('/new', async (req, res) => {
     renderNewPage(res, new Vinyl())
 })
 
-// Create Vinyl async //
-
-//upload
+// New Vinyl
 
 router.post('/', async (req, res) => {
     const vinyl = new Vinyl({
@@ -51,24 +49,108 @@ router.post('/', async (req, res) => {
 
     try {
         const newVinyl = await vinyl.save()
-        //res.redirect(`vinyls/${newVinyl.id}`)
-        res.redirect(`vinyls`)
+        res.redirect(`vinyls/${newVinyl.id}`)
     } catch {
         renderNewPage(res, vinyl, true)
     }
 }) 
 
 
-// render/redirects page with error message
+// Show Vinyl 
+// populate changes from an id to an object (adds artist information)
+router.get('/:id', async (req, res) => {
+  try {
+    const vinyl = await Vinyl.findById(req.params.id)
+                           .populate('artist')
+                           .exec()
+    res.render('vinyls/show', { vinyl: vinyl })
+  } catch {
+    res.redirect('/')
+  }
+})
+
+// Edit Vinyl 
+router.get('/:id/edit', async (req, res) => {
+    try {
+      const vinyl = await Vinyl.findById(req.params.id)
+      renderEditPage(res, vinyl)
+    } catch {
+      res.redirect('/')
+    }
+  })
+  
+
+// Update Vinyl Route
+router.put('/:id', async (req, res) => {
+    let book
+  
+    try {
+      vinyl = await Vinyl.findById(req.params.id)
+      vinyl.title = req.body.title
+      vinyl.artist = req.body.artist
+      vinyl.releaseDate = new Date(req.body.releaseDate)
+      vinyl.genre = req.body.genre
+      vinyl.description = req.body.description
+      if (req.body.cover != null && req.body.cover !== '') {
+        saveCover(vinyl, req.body.cover)
+      }
+      await vinyl.save()
+      res.redirect(`/vinyls/${vinyl.id}`)
+    } catch {
+      if (vinyl != null) {
+        renderEditPage(res, vinyl, true)
+      } else {
+        redirect('/')
+      }
+    }
+  })
+  
+  // Delete Vinyl Page
+  router.delete('/:id', async (req, res) => {
+    let vinyl
+    try {
+      vinyl = await Vinyl.findById(req.params.id)
+      await vinyl.remove()
+      res.redirect('/vinyls')
+    } catch {
+      if (vinyl != null) {
+        res.render('vinyls/show', {
+          vinyl: vinyl,
+          errorMessage: 'Could not remove vinyl'
+        })
+      } else {
+        res.redirect('/')
+      }
+    }
+  })
+
+
+
 async function renderNewPage(res, vinyl, hasError = false) {
+    renderFormPage(res, vinyl, 'new', hasError)
+}
+
+
+async function renderEditPage(res, vinyl, hasError = false) {
+    renderFormPage(res, vinyl, 'edit', hasError)
+}
+
+// render/redirects/edits page with error message
+async function renderFormPage(res, vinyl, form, hasError = false) {
     try {
         const artists = await Artist.find({})
         const params = {
             artists: artists,
             vinyl: vinyl
         }
-        if (hasError) params.errorMessage = 'Error Creating Vinyl'
-        res.render('vinyls/new', params)
+        if (hasError) {
+            if (form === 'edit') {
+                params.errorMessage = 'Error Updating Vinyl'
+              } else {
+                params.errorMessage = 'Error Creating Vinyl'
+              }
+        } 
+        res.render(`vinyls/${form}`, params)
     } catch {
         res.redirect('/vinyls')
     }

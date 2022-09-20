@@ -6,7 +6,7 @@
     <label>Artist</label>
     <select name="artist">
     <% artists.forEach(artist => { %>
-        <% if (artist.id === vinyl.artist) { %>
+        <% if (`${artist.id}` === `${vinyl.artist}`) { %>
             <option selected label="<%= artist.name %>" value="<%= artist.id %>">   
         <% } else {%>
             <option label="<%= artist.name %>" value="<%= artist.id %>"> 

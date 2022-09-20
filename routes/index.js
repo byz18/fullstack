@@ -6,11 +6,11 @@ const Vinyl = require('../models/vinyl')
 router.get('/', async (req, res) => {
     let vinyls
     try {
-        vinyls = await Vinyl.find().sort({ createAt: 'desc'}).limit(5).exec()
-    } catch{
+        vinyls = await Vinyl.find().sort({ createdAt: 'desc'}).limit(5).exec()
+    } catch {
         vinyls = []
     }
-    res.render('index', { vinyls: vinyls})
+    res.render('index', { vinyls: vinyls })
 })
 
 module.exports = router

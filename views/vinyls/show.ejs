@@ -1,0 +1,10 @@
+<h2><%= vinyl.title %></h2>
+<img width="150" height="150" src="<%= vinyl.coverImagePath %>">
+<div>Artist: <%= vinyl.artist.name %></div>
+<div>Release Date: <%= vinyl.releaseDate.toDateString() %></div>
+<div>Genre: <%= vinyl.genre %></div>
+<div>Description: <%= vinyl.description %></div>
+
+<a href="/vinyls/<%= vinyl.id %>/edit">Edit</a>
+<a href="/artists/<%= vinyl.artist.id %>">View Artist</a>
+<%-  include('../partials/deleteForm', { url: `/vinyls/${vinyl.id}` }) %>

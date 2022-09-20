@@ -5,6 +5,8 @@
 <% if (vinylsByArtist.length > 0) { %>
   <h2>Vinyls By Artist</h2>
   <% vinylsByArtist.forEach(vinyl => { %>
-    <img height="150" width="150" src="<%= vinyl.coverImagePath %>">
+    <a href="/vinyls/<%= vinyl.id %>">
+      <img height="150" width="150" src="<%= vinyl.coverImagePath %>">
+    </a>
   <% }) %>
 <% } %>

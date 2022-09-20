@@ -10,7 +10,7 @@ router.get('/', async (req, res) => {
     if (req.query.name != null && req.query.name !== '') {
         searchOptions.name = new RegExp(req.query.name, 'i')
     }
-    try{
+    try {
         const artists = await Artist.find(searchOptions)
         res.render('artists/index', {
             artists: artists,
@@ -95,7 +95,7 @@ router.delete('/:id', async (req, res) => {
         await artist.remove()
         res.redirect('/artists')
     } catch {
-        if(artist == null) {
+        if (artist == null) {
             res.redirect('/')
         } else {
             res.redirect(`artists/${artist.id}`)
