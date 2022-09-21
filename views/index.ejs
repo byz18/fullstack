@@ -1,8 +1,2 @@
 <h2 class="page-header">Recently Added</h2>
-<div>
-    <% vinyls.forEach(vinyl => { %>
-        <a href="/vinyls/<%= vinyl.id %>">
-        <img height="150" width ="150" src="<%= vinyl.coverImagePath %>">
-        </a>
-    <% }) %>
-</div>
+<%- include('partials/vinylGrid', { vinyls: vinyls, large: true }) %>

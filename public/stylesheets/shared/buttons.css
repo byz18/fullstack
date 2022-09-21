@@ -5,7 +5,7 @@
     --color-btn-primary-background-hover: var(--color-text-medium);
 
     --color-btn-danger-background:var(--color-text-light);
-    --color-btn-danger-text: rgba(180, 0, 0, 0.9);
+    --color-btn-danger-text: var(--color-btn-danger);
     --color-btn-danger-background-hover: rgb(255, 86, 86);
 }
 

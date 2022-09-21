@@ -11,10 +11,6 @@
     margin-bottom: 0.5rem;
 }
 
-.form-row-end {
-    justify-content: flex-end;
-}
-
 .form-item {
     display: flex;
     flex-direction: column;
@@ -29,6 +25,10 @@
 
 .form-item-no-grow {
     flex-grow 0;
+}
+
+.form-row-end {
+    justify-content: flex-end;
 }
 
 .form-item > label {

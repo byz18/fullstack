@@ -1,0 +1,12 @@
+<% vinylCoverClass = locals.large ?
+ 'vinyl-cover-larger' : ''%>
+ <% vinylGridClass = locals.large ?
+ 'vinyl-grid-larger' : ''%>
+<div class="vinyl-grid <%= vinylGridClass %>">
+    <% vinyls.forEach(vinyl => { %>
+        <a href="/vinyls/<%= vinyl.id %>">
+          <img class="vinyl-cover <%= vinylCoverClass %>"
+          src="<%= vinyl.coverImagePath %>">
+        </a>
+      <% }) %>
+</div>

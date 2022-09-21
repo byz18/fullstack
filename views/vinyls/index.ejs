@@ -20,10 +20,5 @@
         <button class="btn btn-primary" type="submit">Search</button>
     </div>
 </form>
-<div>
-    <% vinyls.forEach(vinyl => { %>
-        <a href="/vinyls/<%= vinyl.id %>">
-        <img height="150" width ="150" src="<%= vinyl.coverImagePath %>">
-        </a>
-    <% }) %>
-</div>
+<br>
+<%- include('../partials/vinylGrid', { vinyls: vinyls, large: true }) %>

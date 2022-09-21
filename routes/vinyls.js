@@ -157,7 +157,7 @@ async function renderFormPage(res, vinyl, form, hasError = false) {
 }
 
 function saveCover(vinyl, coverEncoded) {
-    if (coverEncoded == null) return
+    if(coverEncoded == null || coverEncoded.length < 1) return
     const cover = JSON.parse(coverEncoded)
     if (cover != null && imageMimeTypes.includes(cover.type)) {
         vinyl.coverImage = new Buffer.from(cover.data, 'base64')

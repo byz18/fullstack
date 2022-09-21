@@ -1,14 +1,23 @@
-document.addEventListener('DOMContentLoaded', function() {
-    FilePond.registerPlugin(FilePondPluginImagePreview);
-    FilePond.registerPlugin(FilePondPluginImageResize);
-    FilePond.registerPlugin(FilePondPluginFileEncode);
-    const inputElement = document.querySelector('input[type="file"]');
-    const pond = FilePond.create(inputElement);
-    FilePond.setOptions({
-        stylePanelAspectRatio: 1 / 1,
-        imageResizeTargetWidth: 150,
-        imageResizeTargetHeight: 150,
-    });
-    FilePond.parse(document.body);
-  });  
+const rootStyles = window.getComputedStyle(document.documentElement)
 
+if (rootStyles.getPropertyValue('--vinyl-cover-width-large') != null && rootStyles.getPropertyValue('--vinyl-cover-width-large') !== '') {
+  ready()
+} else {
+  document.getElementById('main-css').addEventListener('load', ready)
+}
+
+function ready() {
+  const coverWidth = parseFloat(rootStyles.getPropertyValue('--vinyl-cover-width-large'))
+  FilePond.registerPlugin(
+    FilePondPluginImagePreview,
+    FilePondPluginImageResize,
+    FilePondPluginFileEncode,
+  )
+
+  FilePond.setOptions({
+    imageResizeTargetWidth: coverWidth,
+    imageResizeTargetHeight: coverWidth,
+  })
+  
+  FilePond.parse(document.body)
+}

@@ -1,12 +1,21 @@
 <h2 class="page-header"><%= vinyl.title %></h2>
-<img width="150" height="150" src="<%= vinyl.coverImagePath %>">
-<div>Artist: <%= vinyl.artist.name %></div>
-<div>Release Date: <%= vinyl.releaseDate.toDateString() %></div>
-<div>Genre: <%= vinyl.genre %></div>
-<div>Description: <%= vinyl.description %></div>
-
-<div class="btn-row">
-    <a class="btn btn-primary"  href="/vinyls/<%= vinyl.id %>/edit">Edit</a>
-    <a class="btn btn-primary" href="/artists/<%= vinyl.artist.id %>">View Artist</a>
-    <%-  include('../partials/deleteForm', { url: `/vinyls/${vinyl.id}` }) %>
+<div class="vinyl-details">
+    <div>
+        <img class="vinyl-cover" src="<%= vinyl.coverImagePath %>">
+        <div class="vinyl-details-btn-grid">
+            <a class="btn btn-primary"  href="/vinyls/<%= vinyl.id %>/edit">Edit</a>
+            <%-  include('../partials/deleteForm', { url: `/vinyls/${vinyl.id}` }) %>
+            <a class="btn btn-primary vinyl-details-artist-button" href="/artists/<%= vinyl.artist.id %>">View Artist</a>
+        </div>
+    </div>
+    <div class="vinyl-details-grid">
+        <div class="vinyl-details-label">Artist</div>
+        <div><%= vinyl.artist.name %></div>
+        <div class="vinyl-details-label">Release Date</div>
+        <div><%= vinyl.releaseDate.toDateString() %></div>
+        <div class="vinyl-details-label">Genre</div>
+        <div><%= vinyl.genre %></div>
+        <div class="vinyl-details-label">Description</div>
+        <div><%= vinyl.description %></div>
+    </div>
 </div>

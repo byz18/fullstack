@@ -3,11 +3,13 @@
 @import 'shared/header.css';
 @import 'shared/buttons.css';
 @import 'shared/form.css';
+@import 'shared/vinyl.css';
 
 
 :root {
     font-family: 'Futura';
     font-size: 20px;
+    font-weight: 100;
     color: var(--color-text-light);
 }
 
@@ -20,9 +22,9 @@ body {
 }
 
 .container {
-    max-width: 1900px;
+    max-width: 1200px;
     margin: auto;
-    margin-bottom: 1rem;
+    margin-bottom: 3rem;
 }
 
 .inner-container {
@@ -32,4 +34,8 @@ body {
 .page-header {
     font-size: 2rem;
     font-weight: 500;
+}
+
+.error-message {
+    color: var(--color-btn-danger)
 }
