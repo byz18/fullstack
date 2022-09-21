@@ -2,10 +2,11 @@
     --color-btn-primary-background: var(--color-text-light);
     --color-btn-primary-text: var(--color-background-dark);
     --color-btn-border: var(--color-text-light);
-    --color-btn-primary-background-medium: var(--color-text-medium);
+    --color-btn-primary-background-hover: var(--color-text-medium);
 
-    --color-btn-danger-background:var(--color-text-light) ;
-    --color-btn-danger-text: rgb(180, 0, 0, 0.9);
+    --color-btn-danger-background:var(--color-text-light);
+    --color-btn-danger-text: rgba(180, 0, 0, 0.9);
+    --color-btn-danger-background-hover: rgb(255, 86, 86);
 }
 
 .btn {
@@ -43,6 +44,10 @@
     background-color: var(--color-btn-danger-background);
 }
 
-.btn:hover {
-    background-color: var(--color-btn-primary-background-medium);
+.btn-primary:hover {
+    background-color: var(--color-btn-primary-background-hover);
+}
+
+.btn-danger:hover {
+    background-color: var(--color-btn-danger-background-hover);
 }

@@ -1,6 +1,8 @@
 <h2 class="page-header">Edit Vinyl</h2>
 <form action="/vinyls/<%= vinyl.id %>?_method=PUT" method="POST">
     <%- include('_form_fields') %>
-    <a class="btn btn-primary" href="/vinyls">Cancel</a>
-    <button class="btn btn-primary" type="submit">Update</button>
+    <div class="form-row form-row-end btn-row">
+        <a class="btn btn-danger" href="/vinyls">Cancel</a>
+        <button class="btn btn-primary" type="submit">Update</button>
+    </div>
 </form>

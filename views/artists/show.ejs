@@ -5,7 +5,7 @@
   { url: `/artists/${artist.id}` }) %>
   <% if (vinylsByArtist.length > 0) { %>
 </div>
-  <h2>Vinyls By Artist</h2>
+  <h2 class="page-header">Vinyls By Artist</h2>
   <% vinylsByArtist.forEach(vinyl => { %>
     <a href="/vinyls/<%= vinyl.id %>">
       <img height="150" width="150" src="<%= vinyl.coverImagePath %>">

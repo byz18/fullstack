@@ -1,6 +1,8 @@
 <h2 class="page-header">New Artist </h2>
 <form action="/artists" method="POST">
     <%- include('_form_fields') %>
-    <a class="btn btn-primary" href="/artists">Cancel</a>
-    <button class="btn btn-primary" type="submit">Add</button>
+    <div class="form-row form-row-end btn-row">
+        <a class="btn btn-danger" href="/artists">Cancel</a>
+        <button class="btn btn-primary" type="submit">Add</button>
+    </div>
 </form>

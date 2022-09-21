@@ -1,6 +1,7 @@
 <h2 class="page-header">New Vinyl</h2>
 <form action="/vinyls" method="POST">
     <%- include('_form_fields') %>
-    <a href="/vinyls">Cancel</a>
-    <button type="submit">Add</button>
+    <div class="form-row  form-row-end btn-row">
+        <a class="btn btn-danger" href="/vinyls">Cancel</a>
+        <button class="btn btn-primary" type="submit">Add</button>
 </form>
